@@ -2,6 +2,7 @@ package ro.unibuc.project.common;
 
 public class DateTime extends Date{
 
+    // Just be aware Java pune la dispozitie clase ptr managementul datelor
     private int hour;
     private int minutes;
 

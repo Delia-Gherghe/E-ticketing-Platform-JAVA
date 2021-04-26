@@ -1,18 +1,18 @@
 package ro.unibuc.project;
 
 import ro.unibuc.project.clients.*;
+import ro.unibuc.project.common.Date;
 import ro.unibuc.project.events.*;
 import ro.unibuc.project.common.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 public class PlatformService {
 
-    static String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    static String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+    private static String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
 
     public Location generateLocation(){
         String[] cities = {"Bucharest", "Rome", "Monte Carlo", "Moscow", "Miami", "Paris", "London", "Madrid",
@@ -98,11 +98,10 @@ public class PlatformService {
 
     }
 
-    public Event generateEvent(){
+    public Event generateEvent(boolean isOnline){
         String[] eventTypes = {"concert", "movie", "sport", "fashion", "theatre", "gaming", "art"};
         Random rand = new Random();
         String eventType = eventTypes[rand.nextInt(eventTypes.length)];
-        boolean isOnline = rand.nextBoolean();
         double price = (rand.nextInt(210) + 3) * 10 + (double)Math.round(rand.nextDouble() * 10)/10;
         if (isOnline){
             String eventName = eventType.substring(0, 1).toUpperCase() + eventType.substring(1)
@@ -127,60 +126,151 @@ public class PlatformService {
         return eventTypes[rand.nextInt(eventTypes.length)];
     }
 
-    public Client[] initClients(int n){
-        Client[] clients = new Client[n];
+    public List<Client> initClients(int n){
+        List<Client> clients = new ArrayList<>();
         for (int i = 0; i < n; i++){
-            clients[i] = generatePerson();
+            clients.add(generatePerson());
         }
         return clients;
     }
 
-    public Event[] initEvents(int n){
-        Event[] events = new Event[n];
+    public List<Event> initEvents(int n){
+        List<Event> events = new ArrayList<>();
+        Random rand = new Random();
         for (int i = 0; i < n; i++){
-            events[i] = generateEvent();
+            events.add(generateEvent(rand.nextBoolean()));
         }
         return events;
     }
 
-    public void sortClientsAge(Client[] clients){
-        Arrays.sort(clients, new ClientAgeComparator());
+    public void sortClientsAge(List<Client> clients){
+        clients.sort(new ClientAgeComparator());
     }
 
-    public void sortClientsNrTickets(Client[] clients){
-        Arrays.sort(clients, new ClientNrTicketsComparator());
+    public void sortClientsNrTickets(List<Client> clients){
+        clients.sort(new ClientNrTicketsComparator());
     }
 
-    public void sortClientsNrTicketsAge(Client[] clients){
-        Arrays.sort(clients, new ClientAgeComparator());
-        Arrays.sort(clients, new ClientNrTicketsComparator());
+    public void sortClientsNrTicketsAge(List<Client> clients){
+        clients.sort(new ClientAgeComparator());
+        clients.sort(new ClientNrTicketsComparator());
     }
 
-    public Event[] filter(Filterable<String, Event> filterable, Event[] events, String value) {
+    public List<Event> filter(Filterable<String, Event> filterable, List<Event> events, String value) {
         return filterable.filter(events, value);
     }
 
-    public Client[] filter(Filterable<Long, Client> filterable, Client[] clients, Long value) {
+    public List<Client> filter(Filterable<Long, Client> filterable, List<Client> clients, Long value) {
         return filterable.filter(clients, value);
     }
 
-    public <T> void display(T[] items){
+    public <T> void display(List<T> items){
         for (T item : items){
             System.out.println(item);
             System.out.println();
         }
     }
 
-    public void buyMultipleTickets(Client client, Event[] events){
+    public <T> void remove(List<T> items, int index){
+        items.remove(index);
+    }
+
+    public void buyMultipleTickets(Client client, List<Event> events){
         ArrayList<Integer> eventIndex = new ArrayList<>();
-        for (int i = 0; i < events.length; i++){
+        for (int i = 0; i < events.size(); i++){
             eventIndex.add(i);
         }
         Collections.shuffle(eventIndex);
         Random rand = new Random();
-        for (int i = 0; i < rand.nextInt(events.length); i++){
-            client.buyTicket(events[eventIndex.get(i)], generateRandomTicketType());
+        for (int i = 0; i < rand.nextInt(events.size()); i++){
+            buyTicket(client, events.get(eventIndex.get(i)), generateRandomTicketType());
         }
 
     }
+
+    public void buyTicket(Client c, Event e, String ticketType){
+        Ticket newTicket = new Ticket(ticketType, e, String.valueOf(c.getName().charAt(0)) + String.valueOf(c.getSurname().charAt(0)));
+        c.getTickets().add(newTicket);
+        //ArrayList<Ticket> newTickets = c.getTickets();
+        //newTickets.add(newTicket);
+        //c.setTickets(newTickets);
+    }
+
+    public double totalMoneySpent(Client c){
+        double amount = 0;
+        for (Ticket ticket : c.getTickets()){
+            amount += ticket.computePrice();
+        }
+
+        return amount;
+    }
+
+    public long age(Client c){
+        LocalDate birthday = LocalDate.of(c.getBirthday().getYear(), c.getBirthday().getMonth(), c.getBirthday().getDay());
+        LocalDate currentDate = LocalDate.now();
+        return ChronoUnit.YEARS.between(birthday, currentDate);
+    }
+
+    public List<Event> combineEvents(List<OnlineEvent> onlineEvents, List<PhysicalEvent> physicalEvents){
+        List<Event> allEvents = new ArrayList<>();
+        allEvents.addAll(onlineEvents);
+        allEvents.addAll(physicalEvents);
+        return allEvents;
+    }
+
+    public void listLocations(List<Location> locations){
+        for (int i = 0; i < locations.size(); i++){
+            Location location = locations.get(i);
+            System.out.println(i + ") " + location.getCountry() + " " + location.getCity() + " " +
+                    location.getStreetName() + " " + location.getStreetNr());
+        }
+    }
+
+    public void listClients(List<Client> clients){
+        for (int i = 0; i < clients.size(); i++){
+            Client client = clients.get(i);
+            System.out.println(i + ") " + client.getName() + " " + client.getSurname() + " " + client.getBirthday());
+        }
+    }
+
+    public void listOnlineEvents(List<OnlineEvent> onlineEvents){
+        for (int i = 0; i < onlineEvents.size(); i++){
+            OnlineEvent oe = onlineEvents.get(i);
+            System.out.println(i + ") " + oe.getName() + " (" + oe.getType() + ") " + oe.getDateTime());
+        }
+    }
+
+    public void listPhysicalEvents(List<PhysicalEvent> physicalEvents){
+        for (int i = 0; i < physicalEvents.size(); i++){
+            PhysicalEvent pe = physicalEvents.get(i);
+            System.out.println(i + ") " + pe.getName() + " (" + pe.getType() + ") " + pe.getDateTime() + " " +
+                    pe.getLocation().getCity() + ", " + pe.getLocation().getCountry());
+        }
+    }
+
+    public Event chooseEvent(List<OnlineEvent> onlineEvents, List<PhysicalEvent> physicalEvents){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Choose Online (O)/Physical (P)");
+        String eventType = scanner.next();
+        Event chosenEvent;
+        if (eventType.equals("O")){
+            listOnlineEvents(onlineEvents);
+            System.out.println("Select event index:");
+            int eventIndex = scanner.nextInt();
+            chosenEvent = onlineEvents.get(eventIndex);
+        } else {
+            listPhysicalEvents(physicalEvents);
+            System.out.println("Select event index:");
+            int eventIndex = scanner.nextInt();
+            chosenEvent = physicalEvents.get(eventIndex);
+        }
+        return chosenEvent;
+    }
+
+    public long remainingDays(Event event){
+        LocalDate eventDate = LocalDate.of(event.getDateTime().getYear(), event.getDateTime().getMonth(), event.getDateTime().getDay());
+        LocalDate currentDate = LocalDate.now();
+        return ChronoUnit.DAYS.between(currentDate, eventDate);
+    }
+
 }

@@ -4,6 +4,7 @@ import ro.unibuc.project.common.DateTime;
 import ro.unibuc.project.events.Event;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Random;
 
 public class Ticket implements Comparable<Ticket>{
@@ -86,5 +87,18 @@ public class Ticket implements Comparable<Ticket>{
         else {
             return -1;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Ticket)) return false;
+        Ticket ticket = (Ticket) o;
+        return id.equals(ticket.id) && ticketType.equals(ticket.ticketType) && event.equals(ticket.event);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, ticketType, event);
     }
 }

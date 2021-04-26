@@ -61,11 +61,6 @@ public abstract class Event {
         this.minPrice = minPrice;
     }
 
-    public long remainingDays(){
-        LocalDate eventDate = LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
-        LocalDate currentDate = LocalDate.now();
-        return ChronoUnit.DAYS.between(currentDate, eventDate);
-    }
 
     public void boughtTicket(){
         if (maxPeople > 0){

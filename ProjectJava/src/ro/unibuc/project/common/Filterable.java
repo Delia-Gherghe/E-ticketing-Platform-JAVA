@@ -1,5 +1,7 @@
 package ro.unibuc.project.common;
 
+import java.util.List;
+
 public interface Filterable<T, C>{
-        C[] filter(C[] items, T value);
+        List<C> filter(List<C> items, T value);
 }
