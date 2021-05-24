@@ -24,21 +24,7 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\locationsW.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\onlineEvents.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\physicalEvent.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

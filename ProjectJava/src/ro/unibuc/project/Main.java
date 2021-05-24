@@ -2,24 +2,38 @@ package ro.unibuc.project;
 
 import ro.unibuc.project.clients.*;
 import ro.unibuc.project.common.Location;
+import ro.unibuc.project.database.config.SetupData;
+import ro.unibuc.project.database.repository.*;
 import ro.unibuc.project.events.*;
 import ro.unibuc.project.ioservices.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Callable;
 
 public class Main {
     public static void main(String[] args) {
+
+        SetupData setupData = new SetupData();
+        setupData.setup();
         PlatformService service = new PlatformService();
         Logger logger = Logger.getInstance();
 
+        /*
         Reader reader = Reader.getInstance();
         List<Location> locations = reader.readLocationsCSV();
         List<Client> clients = reader.readClientsCSV();
         List<OnlineEvent> onlineEvents = reader.readOnlineEventsCSV();
         List<PhysicalEvent> physicalEvents = reader.readPhysicalEventsCSV();
+
+         */
+
+
+        LocationRepository locationRepository = new LocationRepository();
+        OnlineEventRepository onlineEventRepository = new OnlineEventRepository();
+        PhysicalEventRepository physicalEventRepository = new PhysicalEventRepository();
+        ClientRepository clientRepository = new ClientRepository();
+
 
         Scanner scanner = new Scanner(System.in);
         showMenu();
@@ -28,129 +42,162 @@ public class Main {
 
             switch (option) {
                 case 0:
+                    /*
                     Writer writer = Writer.getInstance();
                     writer.writeLocationsCSV(locations);
                     writer.writeClientsCSV(clients);
                     writer.writeOnlineEventsCSV(onlineEvents);
                     writer.writePhysicalEventsCSV(physicalEvents);
+
+                     */
                     logger.close();
                     return;
                 case 1:
-                    service.display(locations);
+                    //service.display(locations);
+                    service.display(locationRepository.findAll());
                     logger.write("Show locations");
                     break;
                 case 2:
-                    service.display(clients);
+                    //service.display(clients);
+                    service.display(clientRepository.findAll());
                     logger.write("Show clients");
                     break;
                 case 3:
-                    service.display(onlineEvents);
+                    //service.display(onlineEvents);
+                    service.display(onlineEventRepository.findAll());
                     logger.write("Show Online Events");
                     break;
                 case 4:
-                    service.display(physicalEvents);
+                    //service.display(physicalEvents);
+                    service.display(physicalEventRepository.findAll());
                     logger.write("Show Physical Events");
                     break;
                 case 5:
-                    locations.add(service.generateLocation());
+                    //locations.add(service.generateLocation());
+                    locationRepository.insert(service.generateLocation());
                     logger.write("Add location");
                     break;
                 case 6:
-                    clients.add(service.generatePerson());
+                    //clients.add(service.generatePerson());
+                    clientRepository.insert(service.generatePerson());
                     logger.write("Add client");
                     break;
                 case 7:
-                    onlineEvents.add((OnlineEvent) service.generateEvent(true));
+                    //onlineEvents.add((OnlineEvent) service.generateEvent(true));
+                    onlineEventRepository.insert((OnlineEvent) service.generateEvent(true));
                     logger.write("Add Online Event");
                     break;
                 case 8:
-                    physicalEvents.add((PhysicalEvent) service.generateEvent(false));
+                    //physicalEvents.add((PhysicalEvent) service.generateEvent(false));
+                    physicalEventRepository.insert((PhysicalEvent) service.generateEvent(false));
                     logger.write("Add Physical Event");
                     break;
                 case 9:
-                    service.display(service.filter(new ClientAgeFilter(), clients, 18L));
+                    service.display(service.filter(new ClientAgeFilter(), clientRepository.findAll(), 18L));
                     logger.write("Show overage clients");
                     break;
                 case 10:
                     System.out.println("Enter event type (concert, movie, sport, fashion, theatre, gaming, art)");
                     String type = scanner.next();
-                    service.display(service.filter(new EventTypeFilter(), service.combineEvents(onlineEvents, physicalEvents), type));
+                    //service.display(service.filter(new EventTypeFilter(), service.combineEvents(onlineEvents, physicalEvents), type));
+                    service.display(service.filter(new EventTypeFilter(), service.combineEvents(onlineEventRepository.findAll(),
+                            physicalEventRepository.findAll()), type));
                     logger.write("Filter events by type");
                     break;
                 case 11:
-                    service.listClients(clients);
-                    System.out.println("Select client index:");
-                    int index = scanner.nextInt();
-                    System.out.println(service.age(clients.get(index)));
+                    //System.out.println(service.age(service.choseClient(clients);
+                    System.out.println(service.age(service.choseClient(clientRepository.findAll())));
                     logger.write("Show age of client");
                     break;
                 case 12:
-                    service.listClients(clients);
-                    System.out.println("Select client index:");
-                    int ind = scanner.nextInt();
-                    System.out.println(service.totalMoneySpent(clients.get(ind)));
+                    //System.out.println(service.totalMoneySpent(service.choseClient(clients)) + " $");
+                    System.out.println(service.totalMoneySpent(service.choseClient(clientRepository.findAll())) + " $");
                     logger.write("Calculate total amount of money spent by client");
                     break;
                 case 13:
-                    service.sortClientsAge(clients);
-                    service.display(clients);
+                    List<Client> clientsAge = clientRepository.findAll();
+                    service.sortClientsAge(clientsAge);
+                    service.display(clientsAge);
                     logger.write("Sort clients by age descending");
                     break;
                 case 14:
-                    service.sortClientsNrTickets(clients);
-                    service.display(clients);
+                    List<Client> clientsNrTickets = clientRepository.findAll();
+                    service.sortClientsNrTickets(clientsNrTickets);
+                    service.display(clientsNrTickets);
                     logger.write("Sort clients by number of tickets bought descending");
                     break;
                 case 15:
-                    service.sortClientsNrTicketsAge(clients);
-                    service.display(clients);
+                    List<Client> clientsTicketsAge = clientRepository.findAll();
+                    service.sortClientsNrTicketsAge(clientsTicketsAge);
+                    service.display(clientsTicketsAge);
                     logger.write("Sort clients by number of tickets descending and by age descending");
                     break;
                 case 16:
-                    service.listClients(clients);
-                    System.out.println("Select client index:");
-                    int clientIndex = scanner.nextInt();
-                    Event event = service.chooseEvent(onlineEvents, physicalEvents);
+                    //Client client = service.choseClient(clients);
+                    Client client = service.choseClient(clientRepository.findAll());
+                    //Event event = service.chooseEvent(onlineEvents, physicalEvents);
+                    Event event = service.chooseEvent(onlineEventRepository.findAll(), physicalEventRepository.findAll());
                     System.out.println("Select ticket type (GENERAL, EARLY, VIP):");
                     String ticketType = scanner.next();
-                    service.buyTicket(clients.get(clientIndex), event, ticketType);
+                    service.buyTicket(client, event, ticketType);
                     logger.write("Buy ticket selecting client and event");
                     break;
                 case 17:
-                    Event chosenEvent = service.chooseEvent(onlineEvents, physicalEvents);
+                    //Event chosenEvent = service.chooseEvent(onlineEvents, physicalEvents);
+                    Event chosenEvent = service.chooseEvent(onlineEventRepository.findAll(), physicalEventRepository.findAll());
                     System.out.println(service.remainingDays(chosenEvent));
                     logger.write("Days left until event");
                     break;
                 case 18:
-                    service.listLocations(locations);
+                    //service.listLocations(locations);
+                    service.listLocations(locationRepository.findAll());
                     System.out.println("Select location index:");
                     int locationIndex = scanner.nextInt();
-                    service.remove(locations, locationIndex);
+                    //service.remove(locations, locationIndex);
+                    locationRepository.deleteById(locationIndex);
                     logger.write("Remove location");
                     break;
                 case 19:
-                    service.listClients(clients);
+                    //service.listClients(clients);
+                    service.listClients(clientRepository.findAll());
                     System.out.println("Select client index:");
                     int clIndex = scanner.nextInt();
-                    service.remove(clients, clIndex);
+                    //service.remove(clients, clIndex);
+                    clientRepository.deleteById(clIndex);
                     logger.write("Remove client");
                     break;
                 case 20:
-                    service.listOnlineEvents(onlineEvents);
+                    //service.listOnlineEvents(onlineEvents);
+                    service.listOnlineEvents(onlineEventRepository.findAll());
                     System.out.println("Select event index:");
                     int oeIndex = scanner.nextInt();
-                    service.remove(onlineEvents, oeIndex);
+                    //service.remove(onlineEvents, oeIndex);
+                    onlineEventRepository.deleteById(oeIndex);
                     logger.write("Remove Online Event");
                     break;
                 case 21:
-                    service.listPhysicalEvents(physicalEvents);
+                    //service.listPhysicalEvents(physicalEvents);
+                    service.listPhysicalEvents(physicalEventRepository.findAll());
                     System.out.println("Select event index:");
                     int peIndex = scanner.nextInt();
-                    service.remove(physicalEvents, peIndex);
+                    //service.remove(physicalEvents, peIndex);
+                    physicalEventRepository.deleteById(peIndex);
                     logger.write("Remove Physical Event");
                     break;
+                case 22:
+                    Client updatedClient = service.choseClient(clientRepository.findAll());
+                    locationRepository.update(updatedClient.getAddress().getId(), service.generateLocation());
+                    logger.write("Update client address");
+                    break;
+                case 23:
+                    Client changeClient = service.choseClient(clientRepository.findAll());
+                    System.out.println("Enter new surname:");
+                    String surname = scanner.next();
+                    clientRepository.updateSurname(changeClient.getId(), surname);
+                    logger.write("Change client surname");
+                    break;
                 default:
-                    System.out.println("Incorrect option! Number must be between 0 and 21");
+                    System.out.println("Incorrect option! Number must be between 0 and 23");
 
             }
 
@@ -169,6 +216,6 @@ public class Main {
                 "14) Sort clients by number of tickets bought descending\n15) Sort clients by number of tickets" +
                 " descending and by age descending\n16) Buy ticket selecting client and event\n"
                 + "17) Days left until event\n18) Remove location\n19) Remove client\n20) Remove online event\n" +
-                "21) Remove physical event\n");
+                "21) Remove physical event\n22) Update client address\n23) Change client surname");
     }
 }

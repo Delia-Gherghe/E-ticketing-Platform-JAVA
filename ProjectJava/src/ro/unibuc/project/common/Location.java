@@ -2,6 +2,7 @@ package ro.unibuc.project.common;
 
 public class Location {
 
+    private int id;
     private String country;
     private String city;
     private String streetName;
@@ -12,6 +13,14 @@ public class Location {
         this.city = city;
         this.streetName = streetName;
         this.streetNr = streetNr;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCountry() {

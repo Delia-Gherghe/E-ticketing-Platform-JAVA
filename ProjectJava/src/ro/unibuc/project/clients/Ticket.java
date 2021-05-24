@@ -9,7 +9,8 @@ import java.util.Random;
 
 public class Ticket implements Comparable<Ticket>{
 
-    private String id;
+    private int id;
+    private String code;
     private String ticketType;
     private Event event;
 
@@ -17,16 +18,31 @@ public class Ticket implements Comparable<Ticket>{
         event.boughtTicket();
         this.ticketType = ticketType;
         this.event = event;
-        this.id = computeId() + idSuffix;
+        this.code = computeId() + idSuffix;
 
     }
 
-    public String getId() {
+    public Ticket(String code, String ticketType, Event event) {
+        this.code = code;
+        this.ticketType = ticketType;
+        this.event = event;
+
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getTicketType() {
@@ -62,12 +78,12 @@ public class Ticket implements Comparable<Ticket>{
         String eventName = event.getName().replace(" ", "");
         Random rand = new Random();
         return eventName.substring(0, eventName.length()/2).toUpperCase() + ticketType.toUpperCase() +
-                String.valueOf(rand.nextInt(1000));
+                rand.nextInt(1000);
     }
 
     @Override
     public String toString() {
-        return "Ticket: " + id + " " + ticketType + "\n" + "Event: " + event.getName() +
+        return "Ticket: " + code + " " + ticketType + "\n" + "Event: " + event.getName() +
                 "\nDate: " + event.getDateTime() + "\nPrice: " + computePrice() + " $" +
                 "\n----------------------------------------";
     }
@@ -94,11 +110,11 @@ public class Ticket implements Comparable<Ticket>{
         if (this == o) return true;
         if (!(o instanceof Ticket)) return false;
         Ticket ticket = (Ticket) o;
-        return id.equals(ticket.id) && ticketType.equals(ticket.ticketType) && event.equals(ticket.event);
+        return code.equals(ticket.code) && ticketType.equals(ticket.ticketType) && event.equals(ticket.event);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ticketType, event);
+        return Objects.hash(code, ticketType, event);
     }
 }

@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 
 public abstract class Event {
 
+    protected int id;
     protected String name;
     protected int maxPeople;
     protected String type;
@@ -19,6 +20,14 @@ public abstract class Event {
         this.type = type;
         this.dateTime = dateTime;
         this.minPrice = minPrice;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -2,6 +2,9 @@ package ro.unibuc.project;
 
 import ro.unibuc.project.clients.*;
 import ro.unibuc.project.common.Date;
+import ro.unibuc.project.database.repository.OnlineEventRepository;
+import ro.unibuc.project.database.repository.PhysicalEventRepository;
+import ro.unibuc.project.database.repository.TicketRepository;
 import ro.unibuc.project.events.*;
 import ro.unibuc.project.common.*;
 
@@ -189,11 +192,17 @@ public class PlatformService {
     }
 
     public void buyTicket(Client c, Event e, String ticketType){
-        Ticket newTicket = new Ticket(ticketType, e, String.valueOf(c.getName().charAt(0)) + String.valueOf(c.getSurname().charAt(0)));
-        c.getTickets().add(newTicket);
-        //ArrayList<Ticket> newTickets = c.getTickets();
-        //newTickets.add(newTicket);
-        //c.setTickets(newTickets);
+        Ticket newTicket = new Ticket(ticketType, e, c.getName().charAt(0) + String.valueOf(c.getSurname().charAt(0)));
+        TicketRepository ticketRepository = new TicketRepository();
+        ticketRepository.insert(c.getId(), newTicket);
+        if (e instanceof OnlineEvent){
+            OnlineEventRepository onlineEventRepository = new OnlineEventRepository();
+            onlineEventRepository.updateMaxPeople(e.getId());
+        } else {
+            PhysicalEventRepository physicalEventRepository = new PhysicalEventRepository();
+            physicalEventRepository.updateMaxPeople(e.getId());
+        }
+        //c.getTickets().add(newTicket);
     }
 
     public double totalMoneySpent(Client c){
@@ -219,28 +228,57 @@ public class PlatformService {
     }
 
     public void listLocations(List<Location> locations){
-        for (int i = 0; i < locations.size(); i++){
-            Location location = locations.get(i);
-            System.out.println(i + ") " + location.getCountry() + " " + location.getCity() + " " +
+        for (Location location : locations){
+            System.out.println(location.getId() + ") " + location.getCountry() + " " + location.getCity() + " " +
                     location.getStreetName() + " " + location.getStreetNr());
         }
     }
 
     public void listClients(List<Client> clients){
+        for (Client client : clients){
+            System.out.println(client.getId() + ") " + client.getName() + " " + client.getSurname() + " " + client.getBirthday());
+        }
+    }
+
+    public void listOnlineEvents(List<OnlineEvent> onlineEvents){
+        for (OnlineEvent onlineEvent : onlineEvents){
+            System.out.println(onlineEvent.getId() + ") " + onlineEvent.getName() + " (" +
+                    onlineEvent.getType() + ") " + onlineEvent.getDateTime());
+        }
+    }
+
+    public void listPhysicalEvents(List<PhysicalEvent> physicalEvents){
+        for (PhysicalEvent pe : physicalEvents){
+            System.out.println(pe.getId() + ") " + pe.getName() + " (" + pe.getType() + ") " + pe.getDateTime() + " " +
+                    pe.getLocation().getCity() + ", " + pe.getLocation().getCountry());
+        }
+    }
+
+
+    public Client choseClient(List<Client> clients){
+        Scanner scanner = new Scanner(System.in);
+        showClients(clients);
+        System.out.println("Select client index:");
+        int clientIndex = scanner.nextInt();
+        return clients.get(clientIndex);
+    }
+
+    private void showClients(List<Client> clients){
         for (int i = 0; i < clients.size(); i++){
             Client client = clients.get(i);
             System.out.println(i + ") " + client.getName() + " " + client.getSurname() + " " + client.getBirthday());
         }
     }
 
-    public void listOnlineEvents(List<OnlineEvent> onlineEvents){
+    private void showOnlineEvents(List<OnlineEvent> onlineEvents){
         for (int i = 0; i < onlineEvents.size(); i++){
-            OnlineEvent oe = onlineEvents.get(i);
-            System.out.println(i + ") " + oe.getName() + " (" + oe.getType() + ") " + oe.getDateTime());
+            OnlineEvent onlineEvent = onlineEvents.get(i);
+            System.out.println(i + ") " + onlineEvent.getName() + " (" +
+                    onlineEvent.getType() + ") " + onlineEvent.getDateTime());
         }
     }
 
-    public void listPhysicalEvents(List<PhysicalEvent> physicalEvents){
+    private void showPhysicalEvents(List<PhysicalEvent> physicalEvents){
         for (int i = 0; i < physicalEvents.size(); i++){
             PhysicalEvent pe = physicalEvents.get(i);
             System.out.println(i + ") " + pe.getName() + " (" + pe.getType() + ") " + pe.getDateTime() + " " +
@@ -254,12 +292,12 @@ public class PlatformService {
         String eventType = scanner.next();
         Event chosenEvent;
         if (eventType.equals("O")){
-            listOnlineEvents(onlineEvents);
+            showOnlineEvents(onlineEvents);
             System.out.println("Select event index:");
             int eventIndex = scanner.nextInt();
             chosenEvent = onlineEvents.get(eventIndex);
         } else {
-            listPhysicalEvents(physicalEvents);
+            showPhysicalEvents(physicalEvents);
             System.out.println("Select event index:");
             int eventIndex = scanner.nextInt();
             chosenEvent = physicalEvents.get(eventIndex);

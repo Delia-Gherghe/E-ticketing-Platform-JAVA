@@ -1,6 +1,24 @@
-Show clients,Mon Apr 26 22:56:05 EEST 2021
-Buy ticket selecting client and event,Mon Apr 26 22:56:34 EEST 2021
-Filter events by type,Mon Apr 26 22:57:08 EEST 2021
-Days left until event,Mon Apr 26 22:57:30 EEST 2021
-Show age of client,Mon Apr 26 22:57:40 EEST 2021
-Calculate total amount of money spent by client,Mon Apr 26 22:57:51 EEST 2021
+Show locations,Mon May 24 22:19:48 EEST 2021
+Show clients,Mon May 24 22:20:23 EEST 2021
+Show Online Events,Mon May 24 22:20:34 EEST 2021
+Show Physical Events,Mon May 24 22:20:40 EEST 2021
+Add client,Mon May 24 22:21:15 EEST 2021
+Show clients,Mon May 24 22:21:18 EEST 2021
+Add Online Event,Mon May 24 22:21:33 EEST 2021
+Show Online Events,Mon May 24 22:21:41 EEST 2021
+Add Physical Event,Mon May 24 22:21:50 EEST 2021
+Show Physical Events,Mon May 24 22:21:54 EEST 2021
+Show overage clients,Mon May 24 22:22:01 EEST 2021
+Filter events by type,Mon May 24 22:22:15 EEST 2021
+Show age of client,Mon May 24 22:22:43 EEST 2021
+Calculate total amount of money spent by client,Mon May 24 22:23:05 EEST 2021
+Sort clients by age descending,Mon May 24 22:23:12 EEST 2021
+Sort clients by number of tickets bought descending,Mon May 24 22:23:29 EEST 2021
+Sort clients by number of tickets descending and by age descending,Mon May 24 22:23:41 EEST 2021
+Buy ticket selecting client and event,Mon May 24 22:24:09 EEST 2021
+Show clients,Mon May 24 22:24:14 EEST 2021
+Days left until event,Mon May 24 22:24:35 EEST 2021
+Remove location,Mon May 24 22:24:45 EEST 2021
+Update client address,Mon May 24 22:25:07 EEST 2021
+Change client surname,Mon May 24 22:26:25 EEST 2021
+Show clients,Mon May 24 22:26:33 EEST 2021

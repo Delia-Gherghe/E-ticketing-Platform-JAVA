@@ -2,14 +2,13 @@ package ro.unibuc.project.clients;
 
 import ro.unibuc.project.common.Date;
 import ro.unibuc.project.common.Location;
-import ro.unibuc.project.events.Event;
 
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class Client implements Comparable<Client>{
 
+    private int id;
     private String name;
     private String surname;
     private Date birthday;
@@ -22,6 +21,14 @@ public class Client implements Comparable<Client>{
         this.birthday = birthday;
         this.tickets = new TreeSet<>();
         this.address = address;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
