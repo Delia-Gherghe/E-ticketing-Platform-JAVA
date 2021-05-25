@@ -36,7 +36,7 @@ public class TicketRepository {
             return ticket;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while inserting the ticket: " + ticket);
+            throw new RuntimeException("Something went wrong while inserting the ticket: " + ticket + exception);
         }
     }
 
@@ -68,7 +68,7 @@ public class TicketRepository {
             return new TreeSet<>(ticketList);
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to get all tickets from client with id " + id);
+            throw new RuntimeException("Something went wrong while tying to get all tickets from client with id " + id + exception);
         }
     }
 

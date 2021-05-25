@@ -34,7 +34,7 @@ public class ClientRepository {
             return client;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while inserting the client: " + client);
+            throw new RuntimeException("Something went wrong while inserting the client: " + client + exception);
         }
     }
 
@@ -61,7 +61,7 @@ public class ClientRepository {
             return clients;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to get all clients");
+            throw new RuntimeException("Something went wrong while tying to get all clients" + exception);
         }
     }
 
@@ -76,7 +76,7 @@ public class ClientRepository {
 
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to update client with id " + id);
+            throw new RuntimeException("Something went wrong while tying to update client with id " + id + exception);
         }
     }
 
@@ -88,7 +88,7 @@ public class ClientRepository {
 
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to delete client with id " + id);
+            throw new RuntimeException("Something went wrong while tying to delete client with id " + id + exception);
         }
     }
 
@@ -116,7 +116,7 @@ public class ClientRepository {
             return client;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to find client with id " + id);
+            throw new RuntimeException("Something went wrong while tying to find client with id " + id + exception);
         }
     }
 

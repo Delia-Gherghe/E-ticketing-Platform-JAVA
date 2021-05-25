@@ -33,7 +33,7 @@ public class LocationRepository {
             return location;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while inserting the location: " + location);
+            throw new RuntimeException("Something went wrong while inserting the location: " + location + exception);
         }
     }
 
@@ -52,7 +52,7 @@ public class LocationRepository {
             return locations;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to get all locations");
+            throw new RuntimeException("Something went wrong while tying to get all locations" + exception);
         }
     }
 
@@ -64,7 +64,7 @@ public class LocationRepository {
 
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to delete location with id " + id);
+            throw new RuntimeException("Something went wrong while tying to delete location with id " + id + exception);
         }
     }
 
@@ -82,7 +82,7 @@ public class LocationRepository {
 
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to update location with id " + id);
+            throw new RuntimeException("Something went wrong while tying to update location with id " + id + exception);
         }
     }
 
@@ -101,7 +101,7 @@ public class LocationRepository {
             return location;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to find location with id " + id);
+            throw new RuntimeException("Something went wrong while tying to find location with id " + id + exception);
         }
     }
 

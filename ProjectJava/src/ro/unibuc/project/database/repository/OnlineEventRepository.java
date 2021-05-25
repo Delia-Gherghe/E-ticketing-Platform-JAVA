@@ -34,7 +34,7 @@ public class OnlineEventRepository {
             resultSet.close();
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while inserting the online event: " + onlineEvent);
+            throw new RuntimeException("Something went wrong while inserting the online event: " + onlineEvent + exception);
         }
     }
 
@@ -53,7 +53,7 @@ public class OnlineEventRepository {
             return onlineEvents;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to get all online events");
+            throw new RuntimeException("Something went wrong while tying to get all online events" + exception);
         }
     }
 
@@ -72,7 +72,7 @@ public class OnlineEventRepository {
             return onlineEvent;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to find online event with id " + id);
+            throw new RuntimeException("Something went wrong while tying to find online event with id " + id + exception);
         }
     }
 
@@ -84,7 +84,7 @@ public class OnlineEventRepository {
 
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to update online event with id " + id);
+            throw new RuntimeException("Something went wrong while tying to update online event with id " + id + exception);
         }
     }
 
@@ -96,7 +96,7 @@ public class OnlineEventRepository {
 
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to delete online event with id " + id);
+            throw new RuntimeException("Something went wrong while tying to delete online event with id " + id + exception);
         }
     }
 

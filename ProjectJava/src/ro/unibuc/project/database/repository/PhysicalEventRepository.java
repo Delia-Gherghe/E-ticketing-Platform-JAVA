@@ -38,7 +38,7 @@ public class PhysicalEventRepository {
             return physicalEvent;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while inserting the physical event: " + physicalEvent);
+            throw new RuntimeException("Something went wrong while inserting the physical event: " + physicalEvent + exception);
         }
     }
 
@@ -63,7 +63,7 @@ public class PhysicalEventRepository {
             return physicalEvents;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to get all physical events");
+            throw new RuntimeException("Something went wrong while tying to get all physical events" + exception);
         }
     }
 
@@ -89,7 +89,7 @@ public class PhysicalEventRepository {
             return physicalEvent;
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to find physical event with id " + id);
+            throw new RuntimeException("Something went wrong while tying to find physical event with id " + id + exception);
         }
     }
 
@@ -101,7 +101,7 @@ public class PhysicalEventRepository {
 
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to update physical event with id " + id);
+            throw new RuntimeException("Something went wrong while tying to update physical event with id " + id + exception);
         }
     }
 
@@ -113,7 +113,7 @@ public class PhysicalEventRepository {
 
 
         } catch (SQLException exception) {
-            throw new RuntimeException("Something went wrong while tying to delete physical event with id " + id);
+            throw new RuntimeException("Something went wrong while tying to delete physical event with id " + id + exception);
         }
     }
 
