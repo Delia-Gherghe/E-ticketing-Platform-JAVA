@@ -73,23 +73,19 @@ public class Main {
                     logger.write("Show Physical Events");
                     break;
                 case 5:
-                    //locations.add(service.generateLocation());
-                    locationRepository.insert(service.generateLocation());
+                    locationRepository.insert(service.enterLocation());
                     logger.write("Add location");
                     break;
                 case 6:
-                    //clients.add(service.generatePerson());
-                    clientRepository.insert(service.generatePerson());
+                    clientRepository.insert(service.enterClient());
                     logger.write("Add client");
                     break;
                 case 7:
-                    //onlineEvents.add((OnlineEvent) service.generateEvent(true));
-                    onlineEventRepository.insert((OnlineEvent) service.generateEvent(true));
+                    onlineEventRepository.insert(service.enterOnlineEvent());
                     logger.write("Add Online Event");
                     break;
                 case 8:
-                    //physicalEvents.add((PhysicalEvent) service.generateEvent(false));
-                    physicalEventRepository.insert((PhysicalEvent) service.generateEvent(false));
+                    physicalEventRepository.insert(service.enterPhysicalEvent());
                     logger.write("Add Physical Event");
                     break;
                 case 9:
@@ -196,8 +192,24 @@ public class Main {
                     clientRepository.updateSurname(changeClient.getId(), surname);
                     logger.write("Change client surname");
                     break;
+                case 24:
+                    locationRepository.insert(service.generateLocation());
+                    logger.write("Insert generated location");
+                    break;
+                case 25:
+                    clientRepository.insert(service.generatePerson());
+                    logger.write("Insert generated client");
+                    break;
+                case 26:
+                    onlineEventRepository.insert((OnlineEvent) service.generateEvent(true));
+                    logger.write("Insert generated online event");
+                    break;
+                case 27:
+                    physicalEventRepository.insert((PhysicalEvent) service.generateEvent(false));
+                    logger.write("Insert generated physical event");
+                    break;
                 default:
-                    System.out.println("Incorrect option! Number must be between 0 and 23");
+                    System.out.println("Incorrect option! Number must be between 0 and 27");
 
             }
 
@@ -216,6 +228,8 @@ public class Main {
                 "14) Sort clients by number of tickets bought descending\n15) Sort clients by number of tickets" +
                 " descending and by age descending\n16) Buy ticket selecting client and event\n"
                 + "17) Days left until event\n18) Remove location\n19) Remove client\n20) Remove online event\n" +
-                "21) Remove physical event\n22) Update client address\n23) Change client surname");
+                "21) Remove physical event\n22) Update client address\n23) Change client surname\n" +
+                "24) Insert generated location\n25) Insert generated client\n26) Insert generated online event\n" +
+                "27) Insert generated physical event\n");
     }
 }

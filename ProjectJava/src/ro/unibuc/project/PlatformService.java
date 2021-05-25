@@ -311,4 +311,74 @@ public class PlatformService {
         return ChronoUnit.DAYS.between(currentDate, eventDate);
     }
 
+    public Location enterLocation(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter country:");
+        String country = scanner.nextLine();
+        System.out.print("Enter city:");
+        String city = scanner.nextLine();
+        System.out.print("Enter street name:");
+        String streetName = scanner.nextLine();
+        System.out.print("Enter street number:");
+        int streetNr = scanner.nextInt();
+        return new Location(country, city, streetName, streetNr);
+    }
+
+
+    public OnlineEvent enterOnlineEvent(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter name:");
+        String name = scanner.nextLine();
+        System.out.print("Enter maximum capacity:");
+        int capacity = scanner.nextInt();
+        System.out.print("Enter type:");
+        String type = scanner.next();
+        System.out.print("Enter date (DD/MM/YYYY):");
+        String[] date = scanner.next().split("/");
+        System.out.print("Enter time (HH:MM):");
+        String[] time = scanner.next().split(":");
+        DateTime dateTime = new DateTime(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2])
+                , Integer.parseInt(time[0]), Integer.parseInt(time[1]));
+        System.out.print("Enter base price:");
+        double basePrice = scanner.nextDouble();
+        System.out.print("Enter link:");
+        String link = scanner.next();
+        return new OnlineEvent(name, capacity, type, dateTime, basePrice, link);
+    }
+
+    public PhysicalEvent enterPhysicalEvent(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter name:");
+        String name = scanner.nextLine();
+        System.out.print("Enter maximum capacity:");
+        int capacity = scanner.nextInt();
+        System.out.print("Enter type:");
+        String type = scanner.next();
+        System.out.print("Enter date (DD/MM/YYYY):");
+        String[] date = scanner.next().split("/");
+        System.out.print("Enter time (HH:MM):");
+        String[] time = scanner.next().split(":");
+        DateTime dateTime = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0])
+                , Integer.parseInt(time[0]), Integer.parseInt(time[1]));
+        System.out.print("Enter base price:");
+        double basePrice = scanner.nextDouble();
+        System.out.println("Enter location:");
+        Location location = enterLocation();
+        return new PhysicalEvent(name, capacity, type, dateTime, basePrice, location);
+    }
+
+    public Client enterClient(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter name:");
+        String name = scanner.nextLine();
+        System.out.print("Enter surname:");
+        String surname = scanner.nextLine();
+        System.out.print("Enter date of birth (DD/MM/YYYY):");
+        String[] birthday = scanner.next().split("/");
+        Date date = new Date(Integer.parseInt(birthday[2]), Integer.parseInt(birthday[1]), Integer.parseInt(birthday[0]));
+        System.out.println("Enter address:");
+        Location location = enterLocation();
+        return new Client(name, surname, date, location);
+    }
+
 }
