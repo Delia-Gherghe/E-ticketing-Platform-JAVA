@@ -168,9 +168,13 @@ public class PlatformService {
     }
 
     public <T> void display(List<T> items){
-        for (T item : items){
-            System.out.println(item);
-            System.out.println();
+        if (items.size() == 0){
+            System.out.println("No such items registered!");
+        } else {
+            for (T item : items) {
+                System.out.println(item);
+                System.out.println();
+            }
         }
     }
 
@@ -229,8 +233,8 @@ public class PlatformService {
 
     public void listLocations(List<Location> locations){
         for (Location location : locations){
-            System.out.println(location.getId() + ") " + location.getCountry() + " " + location.getCity() + " " +
-                    location.getStreetName() + " " + location.getStreetNr());
+            System.out.println(location.getId() + ") St." + location.getStreetName() + " No." + location.getStreetNr()
+                    + " " + location.getCity() + ", " + location.getCountry());
         }
     }
 
@@ -254,12 +258,23 @@ public class PlatformService {
         }
     }
 
+    private int chooseValidIndex(int upperBound){
+        Scanner scanner = new Scanner(System.in);
+        int index;
+        while (true){
+            index = scanner.nextInt();
+            if (index >= 0 && index <= upperBound){
+                break;
+            }
+            System.out.println("Index must be between 0 and " + upperBound + ". Please try again!");
+        }
+        return index;
+    }
 
     public Client choseClient(List<Client> clients){
-        Scanner scanner = new Scanner(System.in);
         showClients(clients);
         System.out.println("Select client index:");
-        int clientIndex = scanner.nextInt();
+        int clientIndex = chooseValidIndex(clients.size() - 1);
         return clients.get(clientIndex);
     }
 
@@ -288,19 +303,29 @@ public class PlatformService {
 
     public Event chooseEvent(List<OnlineEvent> onlineEvents, List<PhysicalEvent> physicalEvents){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Choose Online (O)/Physical (P)");
-        String eventType = scanner.next();
         Event chosenEvent;
-        if (eventType.equals("O")){
-            showOnlineEvents(onlineEvents);
-            System.out.println("Select event index:");
-            int eventIndex = scanner.nextInt();
-            chosenEvent = onlineEvents.get(eventIndex);
-        } else {
-            showPhysicalEvents(physicalEvents);
-            System.out.println("Select event index:");
-            int eventIndex = scanner.nextInt();
-            chosenEvent = physicalEvents.get(eventIndex);
+        System.out.println("Choose Online (O)/Physical (P)");
+        String eventType;
+
+        while (true) {
+            eventType = scanner.next();
+            if (eventType.equals("O")) {
+                showOnlineEvents(onlineEvents);
+                System.out.println("Select event index:");
+                int eventIndex = chooseValidIndex(onlineEvents.size() - 1);
+                chosenEvent = onlineEvents.get(eventIndex);
+                break;
+            }
+
+            if (eventType.equals("P")){
+                showPhysicalEvents(physicalEvents);
+                System.out.println("Select event index:");
+                int eventIndex = chooseValidIndex(physicalEvents.size() - 1) ;
+                chosenEvent = physicalEvents.get(eventIndex);
+                break;
+            }
+
+            System.out.println("Incorrect choice! Please type O or P!");
         }
         return chosenEvent;
     }
@@ -331,13 +356,13 @@ public class PlatformService {
         String name = scanner.nextLine();
         System.out.print("Enter maximum capacity:");
         int capacity = scanner.nextInt();
-        System.out.print("Enter type:");
-        String type = scanner.next();
+        System.out.print("Enter type (concert, movie, sport, fashion, theatre, gaming, art):");
+        String type = validEventType();
         System.out.print("Enter date (DD/MM/YYYY):");
-        String[] date = scanner.next().split("/");
+        String[] date = validDate().split("/");
         System.out.print("Enter time (HH:MM):");
-        String[] time = scanner.next().split(":");
-        DateTime dateTime = new DateTime(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2])
+        String[] time = validTime().split(":");
+        DateTime dateTime = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0])
                 , Integer.parseInt(time[0]), Integer.parseInt(time[1]));
         System.out.print("Enter base price:");
         double basePrice = scanner.nextDouble();
@@ -352,12 +377,12 @@ public class PlatformService {
         String name = scanner.nextLine();
         System.out.print("Enter maximum capacity:");
         int capacity = scanner.nextInt();
-        System.out.print("Enter type:");
-        String type = scanner.next();
+        System.out.print("Enter type (concert, movie, sport, fashion, theatre, gaming, art):");
+        String type = validEventType();
         System.out.print("Enter date (DD/MM/YYYY):");
-        String[] date = scanner.next().split("/");
+        String[] date = validDate().split("/");
         System.out.print("Enter time (HH:MM):");
-        String[] time = scanner.next().split(":");
+        String[] time = validTime().split(":");
         DateTime dateTime = new DateTime(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0])
                 , Integer.parseInt(time[0]), Integer.parseInt(time[1]));
         System.out.print("Enter base price:");
@@ -374,11 +399,55 @@ public class PlatformService {
         System.out.print("Enter surname:");
         String surname = scanner.nextLine();
         System.out.print("Enter date of birth (DD/MM/YYYY):");
-        String[] birthday = scanner.next().split("/");
+        String[] birthday = validDate().split("/");
         Date date = new Date(Integer.parseInt(birthday[2]), Integer.parseInt(birthday[1]), Integer.parseInt(birthday[0]));
         System.out.println("Enter address:");
         Location location = enterLocation();
         return new Client(name, surname, date, location);
+    }
+
+    public String validEventType(){
+        Scanner scanner = new Scanner(System.in);
+        String type;
+        while (true){
+            type = scanner.next();
+            if (type.equals("concert") || type.equals("movie") || type.equals("sport") || type.equals("fashion") ||
+            type.equals("theatre") || type.equals("gaming") || type.equals("art")){
+                break;
+            }
+            System.out.println("Invalid choice! Please select one of the given options!");
+        }
+        return type;
+    }
+
+    public String validDate(){
+        Scanner scanner = new Scanner(System.in);
+        String date;
+        while (true){
+            date = scanner.next();
+            if (date.length() == 10 && Character.isDigit(date.charAt(0)) && Character.isDigit(date.charAt(1)) &&
+                    Character.isDigit(date.charAt(3)) && Character.isDigit(date.charAt(4)) && Character.isDigit(date.charAt(6))
+            && Character.isDigit(date.charAt(7)) && Character.isDigit(date.charAt(8)) && Character.isDigit(date.charAt(9)) &&
+            date.charAt(2) == '/' && date.charAt(5) == '/'){
+                break;
+            }
+            System.out.println("Invalid date format! Please try again!");
+        }
+        return date;
+    }
+
+    public String validTime(){
+        Scanner scanner = new Scanner(System.in);
+        String time;
+        while (true){
+            time = scanner.next();
+            if (time.length() == 5 && Character.isDigit(time.charAt(0)) && Character.isDigit(time.charAt(1)) &&
+                    Character.isDigit(time.charAt(3)) && Character.isDigit(time.charAt(4)) && time.charAt(2) == ':'){
+                break;
+            }
+            System.out.println("Invalid time format! Please try again!");
+        }
+        return time;
     }
 
 }

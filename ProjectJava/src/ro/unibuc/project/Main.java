@@ -37,6 +37,9 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         showMenu();
+        System.out.println("******************************");
+        System.out.println("* TO ACCESS THE MENU TYPE -1 *");
+        System.out.println("******************************\n");
         int option = scanner.nextInt();
         while (true){
 
@@ -75,18 +78,22 @@ public class Main {
                 case 5:
                     locationRepository.insert(service.enterLocation());
                     logger.write("Add location");
+                    System.out.println("Location added successfully!");
                     break;
                 case 6:
                     clientRepository.insert(service.enterClient());
                     logger.write("Add client");
+                    System.out.println("Client added successfully!");
                     break;
                 case 7:
                     onlineEventRepository.insert(service.enterOnlineEvent());
                     logger.write("Add Online Event");
+                    System.out.println("Online event added successfully!");
                     break;
                 case 8:
                     physicalEventRepository.insert(service.enterPhysicalEvent());
                     logger.write("Add Physical Event");
+                    System.out.println("Physical event added successfully!");
                     break;
                 case 9:
                     service.display(service.filter(new ClientAgeFilter(), clientRepository.findAll(), 18L));
@@ -94,7 +101,7 @@ public class Main {
                     break;
                 case 10:
                     System.out.println("Enter event type (concert, movie, sport, fashion, theatre, gaming, art)");
-                    String type = scanner.next();
+                    String type = service.validEventType();
                     //service.display(service.filter(new EventTypeFilter(), service.combineEvents(onlineEvents, physicalEvents), type));
                     service.display(service.filter(new EventTypeFilter(), service.combineEvents(onlineEventRepository.findAll(),
                             physicalEventRepository.findAll()), type));
@@ -102,7 +109,7 @@ public class Main {
                     break;
                 case 11:
                     //System.out.println(service.age(service.choseClient(clients);
-                    System.out.println(service.age(service.choseClient(clientRepository.findAll())));
+                    System.out.println(service.age(service.choseClient(clientRepository.findAll())) + " years old");
                     logger.write("Show age of client");
                     break;
                 case 12:
@@ -134,14 +141,23 @@ public class Main {
                     //Event event = service.chooseEvent(onlineEvents, physicalEvents);
                     Event event = service.chooseEvent(onlineEventRepository.findAll(), physicalEventRepository.findAll());
                     System.out.println("Select ticket type (GENERAL, EARLY, VIP):");
-                    String ticketType = scanner.next();
+                    String ticketType;
+                    while (true)
+                    {
+                        ticketType = scanner.next();
+                        if (ticketType.equals("GENERAL") || ticketType.equals("EARLY") || ticketType.equals("VIP")){
+                            break;
+                        }
+                        System.out.println("Invalid choice! Please select one of the given options!");
+                    }
                     service.buyTicket(client, event, ticketType);
                     logger.write("Buy ticket selecting client and event");
+                    System.out.println("Ticket bought successfully!");
                     break;
                 case 17:
                     //Event chosenEvent = service.chooseEvent(onlineEvents, physicalEvents);
                     Event chosenEvent = service.chooseEvent(onlineEventRepository.findAll(), physicalEventRepository.findAll());
-                    System.out.println(service.remainingDays(chosenEvent));
+                    System.out.println(service.remainingDays(chosenEvent) + " days left");
                     logger.write("Days left until event");
                     break;
                 case 18:
@@ -152,6 +168,7 @@ public class Main {
                     //service.remove(locations, locationIndex);
                     locationRepository.deleteById(locationIndex);
                     logger.write("Remove location");
+                    System.out.println("Location removed successfully!");
                     break;
                 case 19:
                     //service.listClients(clients);
@@ -161,6 +178,7 @@ public class Main {
                     //service.remove(clients, clIndex);
                     clientRepository.deleteById(clIndex);
                     logger.write("Remove client");
+                    System.out.println("Client removed successfully!");
                     break;
                 case 20:
                     //service.listOnlineEvents(onlineEvents);
@@ -170,6 +188,7 @@ public class Main {
                     //service.remove(onlineEvents, oeIndex);
                     onlineEventRepository.deleteById(oeIndex);
                     logger.write("Remove Online Event");
+                    System.out.println("Online event removed successfully!");
                     break;
                 case 21:
                     //service.listPhysicalEvents(physicalEvents);
@@ -179,11 +198,15 @@ public class Main {
                     //service.remove(physicalEvents, peIndex);
                     physicalEventRepository.deleteById(peIndex);
                     logger.write("Remove Physical Event");
+                    System.out.println("Physical event removed successfully!");
                     break;
                 case 22:
                     Client updatedClient = service.choseClient(clientRepository.findAll());
-                    locationRepository.update(updatedClient.getAddress().getId(), service.generateLocation());
+                    System.out.println("Enter new address:");
+                    Location updatedLocation = service.enterLocation();
+                    locationRepository.update(updatedClient.getAddress().getId(), updatedLocation);
                     logger.write("Update client address");
+                    System.out.println("Address updated successfully!");
                     break;
                 case 23:
                     Client changeClient = service.choseClient(clientRepository.findAll());
@@ -191,29 +214,37 @@ public class Main {
                     String surname = scanner.next();
                     clientRepository.updateSurname(changeClient.getId(), surname);
                     logger.write("Change client surname");
+                    System.out.println("Surname changed successfully!");
                     break;
                 case 24:
                     locationRepository.insert(service.generateLocation());
                     logger.write("Insert generated location");
+                    System.out.println("Generated location inserted successfully!");
                     break;
                 case 25:
                     clientRepository.insert(service.generatePerson());
                     logger.write("Insert generated client");
+                    System.out.println("Generated client inserted successfully!");
                     break;
                 case 26:
                     onlineEventRepository.insert((OnlineEvent) service.generateEvent(true));
                     logger.write("Insert generated online event");
+                    System.out.println("Generated online event inserted successfully!");
                     break;
                 case 27:
                     physicalEventRepository.insert((PhysicalEvent) service.generateEvent(false));
                     logger.write("Insert generated physical event");
+                    System.out.println("Generated physical event inserted successfully!");
+                    break;
+                case -1:
+                    showMenu();
                     break;
                 default:
-                    System.out.println("Incorrect option! Number must be between 0 and 27");
+                    System.out.println("Incorrect option! Number must be between -1 and 27");
 
             }
 
-            showMenu();
+            System.out.println();
             option = scanner.nextInt();
 
         }
